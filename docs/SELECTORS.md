@@ -1,6 +1,16 @@
 Selector Guide (Facebook Group Auto Poster)
 ===========================================
 
+Flow (English & Indonesian)
+---------------------------
+- EN: Click Composer Area (Placeholder) -> Type after the modal/editor appears -> Click Post button.
+- ID: Klik Area Composer (Placeholder) -> Isi setelah modal/editor muncul -> Klik Tombol Posting.
+
+Details:
+- The clickable surface is typically a <div role="button" tabindex="0"> containing a <span> with placeholder text (e.g., "Write something..." / "Tulis sesuatu...").
+- After clicking it, the real editor shows up as <div role="textbox" contenteditable="true"> or a <textarea>.
+- Then the Post button is inside the nearest dialog/pagelet.
+
 Purpose
 -------
 This guide explains how the script finds the composer (post text box) and the Post/Publish button, how to use --inspect mode, and how to supply your own robust XPaths.
@@ -47,14 +57,14 @@ Per-link overrides take precedence over global ones.
 --------------------------------------
 Composer scan steps:
 1. Optional override XPath.
-2. JavaScript scoring of all [contenteditable="true"] or role="textbox" elements.
-   - Scores points if: role= textbox, isContentEditable, class hints (composer/notranslate), or contains localized keywords (see COMPOSER_KEYWORDS in code).
-3. Fallback XPaths: //div[@role='textbox' and @contenteditable='true'] and within data-pagelet GroupInlineComposer.
+2. JavaScript scoring of all [contenteditable="true"], div[role="textbox"], or textarea (English + Indonesian keywords only).
+   - Scores points if: role=textbox, isContentEditable, class hints (composer/notranslate/uiTextarea), or contains localized keywords.
+3. Fallback XPaths: //div[@role='textbox' and @contenteditable='true'], //textarea[@name='xc_message'], etc.
 
 Post button scan steps:
 1. Optional override XPath.
-2. Search within nearest dialog / data-pagelet ancestor for elements matching role=button or <button> whose aria-label, textContent, data-testid match localized POST_BUTTON_KEYWORDS or common test IDs (react-composer-post-button).
-3. Fallback XPaths for English “Post”.
+2. Search within nearest dialog/pagelet/form for [role="button"] or <button> whose aria-label/text or data-testid matches EN/ID keywords or FB test IDs.
+3. Fallback XPaths for EN/ID labels (Post/Posting/Kirim/Bagikan/Publish).
 
 5. Crafting Resilient XPaths
 ---------------------------
@@ -111,7 +121,8 @@ The script types the message, pauses, and waits for you to press Enter after man
 
 10. Updating Keyword Lists
 --------------------------
-If your UI language isn’t matched, add localized phrases to COMPOSER_KEYWORDS or POST_BUTTON_KEYWORDS in main.py and re-run.
+Supported out of the box: English + Indonesian only.
+If your UI language isn’t matched, add phrases to COMPOSER_KEYWORDS or POST_BUTTON_KEYWORDS in main.py, then re-run.
 
 11. Common Useful Selector Patterns
 -----------------------------------
@@ -136,4 +147,3 @@ Post button patterns:
 License & Responsibility
 ------------------------
 Provided for educational / personal automation scenarios. You assume all risk. The maintainers are not responsible for account actions taken by the platform.
-
